@@ -39,7 +39,7 @@ export default class OdrerOfBattle extends React.Component<{}, {
   renderUnitList() {
     this.setState({ cardList: this.state.cards.map((card) => {
       return (
-        <li key={card.id} onClick={(e) => this.selectCard(e, card.id)} >{card.unitName}</li>
+        <li key={card.id} onClick={(e) => this.selectCard(e, card.id)} >{card.powerRating}: {card.unitName}</li>
       )
     })})
   }
@@ -87,12 +87,78 @@ export default class OdrerOfBattle extends React.Component<{}, {
 
     // update the changed attribute
     switch(e.target.name) {
+        // section: id
       case 'unitName':
         updatedCard.unitName = newValue;
-        break
+        break;
+      case 'battlefieldRole':
+        updatedCard.battlefieldRole = newValue;
+        break;
+      case 'faction': 
+        updatedCard.crusadeFaction = newValue;
+        break;
+      case 'keywords':
+        updatedCard.selectableKeyWords = newValue.split(' ')
+        break;
+
+      // section: points
+      case 'powerRating':
+        updatedCard.powerRating = parseInt(newValue);
+        break;
+      case 'exp':
+        updatedCard.exp = parseInt(newValue);
+        break;
+      case 'crusadePoints':
+        updatedCard.crusadePoints = parseInt(newValue);
+        break;
+
+      // section: information
       case 'unitType':
         updatedCard.unitType = newValue;
-        break
+        break;
+      case 'equipment':
+        updatedCard.equipment = newValue.split(' ');
+        break;
+      case 'psychicPowers': 
+        updatedCard.psychicPowers = newValue.split(' ');
+        break;
+      case 'warlordTraits': 
+        updatedCard.warlordTraits = newValue.split(' ');
+        break;
+      case 'relics': 
+        updatedCard.relics = newValue.split(' ');
+        break;
+
+      // section: tallies
+      case 'battlesPlayed':
+        updatedCard.battlesPLayed = parseInt(newValue);
+        break;
+      case 'battlesSurvived':
+        updatedCard.battlesSurvived = parseInt(newValue);
+        break;
+      case 'unitsDestroyed':
+        updatedCard.enemyUnitsDestroyed = parseInt(newValue);
+        break;
+      case 'unitsDestroyedPP':
+        updatedCard.enemyUnitsDestroyedWithPsychicPowers= parseInt(newValue);
+        break;
+      case 'unitsDestroyedRW':
+        updatedCard.enemyUnitsDestroyedWithRangedWeapons = parseInt(newValue);
+        break;
+      case 'unitsDestroyedMW':
+        updatedCard.enemyUnitsDestroyedWithMeleeWeapons= parseInt(newValue);
+        break;
+
+      //section: rank
+      case 'rank': 
+        // TODO: make the bellow work in ts 
+        //updatedCard.rank = newValue;
+        break;
+      case 'battleHonours':
+        updatedCard.battleHonours = newValue.split(' ');
+        break;
+      case 'battleScars':
+        updatedCard.battleScars = newValue.split(' ')
     }    
 
     cards[cardIndex] = updatedCard;
