@@ -27,7 +27,7 @@ export default class OdrerOfBattle extends React.Component<{}, {
   }
 
   getCard(cardID: number): UnitCard{
-    let unitCard: UnitCard = this.state.cards.find(card => card.id === cardID) || {unitName: "noCard", id: 0}
+    let unitCard: UnitCard = this.state.cards.find(card => card.id === cardID) || new UnitCard()
 
     return unitCard
   }
@@ -114,10 +114,10 @@ export default class OdrerOfBattle extends React.Component<{}, {
           </div>
           <div className="selectedCard">
             {this.state.selectedCard !== 0 && 
-            <CrusadeCard 
-              key={this.state.selectedCard} 
-              card={_.cloneDeep(this.getCard(this.state.selectedCard))} 
-              onCardChange={this.updateSelectedCard} />
+              <CrusadeCard 
+                key={this.state.selectedCard} 
+                card={_.cloneDeep(this.getCard(this.state.selectedCard))} 
+                onCardChange={this.updateSelectedCard} />
             }
           </div>
         </div>

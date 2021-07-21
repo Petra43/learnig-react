@@ -1,0 +1,1 @@
+export const ranks = ['Battle Ready', 'Blooded', 'Battle Hardened', 'Heroic', 'Legendary']
