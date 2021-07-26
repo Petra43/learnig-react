@@ -89,7 +89,7 @@ export default class OdrerOfBattle extends React.Component<{}, {
 
     // update the changed attribute
     switch(e.target.name) {
-        // section: id
+      // section: id
       case CardInputs.unitName.ref:
         updatedCard.unitName = newValue;
         break;

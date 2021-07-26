@@ -5,6 +5,11 @@ import { UnitCard } from "../../Types/UnitCard";
 import MultiSelect from "../common/MultiSelectInput";
 import NumberInput from "../common/NumberInput";
 
+/**
+ * Component that manages the displaying and editing of crusade cards
+ * @param props 
+ * @returns JSX
+ */
 export default function CrusadeCard(props: {
   card: UnitCard;
   onCardChange: any;
