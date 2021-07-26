@@ -23,7 +23,7 @@ export class UnitCard{
   otherUpgradesAndSelectableAbilities: string[] = [];
 
   //section 4: combat tallis
-  battlesPLayed: number = 0;
+  battlesPlayed: number = 0;
   battlesSurvived: number = 0;
   enemyUnitsDestroyed: number = 0;
   enemyUnitsDestroyedWithPsychicPowers: number = 0;

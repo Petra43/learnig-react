@@ -1,7 +1,8 @@
 import React from "react";
-import { UnitCard } from "../../objects/UnitCard";
+import { UnitCard } from "../../Types/UnitCard";
 import CrusadeCard from "./CrusadeCard";
 import _ from 'lodash';
+import { CardInputs } from "../../constants/StringConstants";
 
 export default class OdrerOfBattle extends React.Component<{}, {
   cards: UnitCard[], 
@@ -53,6 +54,7 @@ export default class OdrerOfBattle extends React.Component<{}, {
 
     let cardID: number = 0;
 
+    // Make sure selected ID is unique
     while(cardID === 0 && !this.state.cards.some(card => card.id === cardID)) {
       cardID = this.generateID()
     }
@@ -88,76 +90,76 @@ export default class OdrerOfBattle extends React.Component<{}, {
     // update the changed attribute
     switch(e.target.name) {
         // section: id
-      case 'unitName':
+      case CardInputs.unitName.ref:
         updatedCard.unitName = newValue;
         break;
-      case 'battlefieldRole':
+      case CardInputs.battlefieldRole.ref:
         updatedCard.battlefieldRole = newValue;
         break;
-      case 'faction': 
+      case CardInputs.faction.ref: 
         updatedCard.crusadeFaction = newValue;
         break;
-      case 'keywords':
+      case CardInputs.keywords.ref:
         updatedCard.selectableKeyWords = newValue.split(' ')
         break;
 
       // section: points
-      case 'powerRating':
+      case CardInputs.powerRating.ref:
         updatedCard.powerRating = parseInt(newValue);
         break;
-      case 'exp':
+      case CardInputs.experience.ref:
         updatedCard.exp = parseInt(newValue);
         break;
-      case 'crusadePoints':
+      case CardInputs.crusadePoints.ref:
         updatedCard.crusadePoints = parseInt(newValue);
         break;
 
       // section: information
-      case 'unitType':
+      case CardInputs.unitType.ref:
         updatedCard.unitType = newValue;
         break;
-      case 'equipment':
+      case CardInputs.equipment.ref:
         updatedCard.equipment = newValue.split(' ');
         break;
-      case 'psychicPowers': 
+      case CardInputs.psychicPowers.ref: 
         updatedCard.psychicPowers = newValue.split(' ');
         break;
-      case 'warlordTraits': 
+      case CardInputs.warlordTraits.ref: 
         updatedCard.warlordTraits = newValue.split(' ');
         break;
-      case 'relics': 
+      case CardInputs.relics.ref: 
         updatedCard.relics = newValue.split(' ');
         break;
 
       // section: tallies
-      case 'battlesPlayed':
-        updatedCard.battlesPLayed = parseInt(newValue);
+      case CardInputs.battlesPlayed.ref:
+        updatedCard.battlesPlayed = parseInt(newValue);
         break;
-      case 'battlesSurvived':
+      case CardInputs.battlesSurvived.ref:
         updatedCard.battlesSurvived = parseInt(newValue);
         break;
-      case 'unitsDestroyed':
+      case CardInputs.unitsDestroyed.ref:
         updatedCard.enemyUnitsDestroyed = parseInt(newValue);
         break;
-      case 'unitsDestroyedPP':
+      case CardInputs.unitDestroyedWithPsychicPowers.ref:
         updatedCard.enemyUnitsDestroyedWithPsychicPowers= parseInt(newValue);
         break;
-      case 'unitsDestroyedRW':
+      case CardInputs.unitDestroyedWithRangedWeapons.ref:
         updatedCard.enemyUnitsDestroyedWithRangedWeapons = parseInt(newValue);
         break;
-      case 'unitsDestroyedMW':
+      case CardInputs.unitDestroyedWithMeleeWeapons.ref:
         updatedCard.enemyUnitsDestroyedWithMeleeWeapons= parseInt(newValue);
         break;
 
       //section: rank
-      case 'rank': 
+      case CardInputs.rank.ref: 
         // TODO: make the bellow work in ts 
         //updatedCard.rank = newValue;
         break;
-      case 'battleHonours':
+      case CardInputs.battleHonours.ref:
         updatedCard.battleHonours = newValue.split(' ');
         break;
-      case 'battleScars':
+      case CardInputs.battleScars.ref:
         updatedCard.battleScars = newValue.split(' ')
     }    
 
@@ -171,14 +173,14 @@ export default class OdrerOfBattle extends React.Component<{}, {
       <section>
         <h2>Order Of Battle</h2>
         <div className="container flex">
-          <div className="cardList">
+          <div className="card-list">
             <h3>Crusade Cards</h3>
             <button onClick={(e) => this.addUnit(e)} >add new unit</button>
             <ul>
               {this.state.cardList}
             </ul>
           </div>
-          <div className="selectedCard">
+          <div className="selected-card">
             {this.state.selectedCard !== 0 && 
               <CrusadeCard 
                 key={this.state.selectedCard} 
