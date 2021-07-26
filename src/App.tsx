@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import OdrerOfBattle from './components/crusade/OrderOfBattle';
-import NavBar from './components/NavBar';
+import NavBar from './components/structural/structural';
 
 function App() {
   return (

@@ -1,7 +1,12 @@
 /* TopNav */
 
-body, h1, h2, h3, h4 {
+* {
+  box-sizing: border-box;
+}
+
+body, h1, h2, h3, h4,input {
   margin: 0;
+  padding: 0;
 }
 
 body{
@@ -20,6 +25,52 @@ body{
   display: flex;
 }
 
-.container > div {
-  width: 100%;  
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
+
+.container {
+  gap: .5rem;
+}
+
+/* Order Of Battle */
+
+.selected-card {
+  flex-grow: 2;
+}
+
+.card-list {
+  flex-grow: 1;
+}
+
+/* Crusade Card */
+
+input {
+  max-width: 100%;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.label {
+  display: flex;
+  width: 40%;
+  background-color: #000;
+  color: #eee;
+}
+
+.section-id {
+  flex-grow: 1;
+}
+
+.section-points {
+  width: 30%;
+}
+
+.section-points label {
+  flex-direction: column;
+}
+.section-points .label  {
+  width: 100%;
+}
+
