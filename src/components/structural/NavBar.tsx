@@ -1,6 +1,3 @@
-import { useSigninCheck } from "reactfire"
-import SignOutBtn from "../common/SignOutBtn"
-
 export default function NavBar() {
   return (
     <nav className="top-nav">

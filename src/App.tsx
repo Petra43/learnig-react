@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSigninCheck } from 'reactfire';
 
 
@@ -11,9 +10,6 @@ import NavBar from './components/structural/NavBar';
 
 
 function App() {
-  const { status, data: signInCheckResult } = useSigninCheck()
-
-
   return (
     <div className="App">
       <NavBar />
@@ -26,7 +22,7 @@ function App() {
 export default App;
 
 function SignIn() {
-  const { status, data: signInCheckResult } = useSigninCheck()
+  const { data: signInCheckResult } = useSigninCheck()
 
   //if (status === 'loading') {
   //  return <h1>add loading spinner</h1>

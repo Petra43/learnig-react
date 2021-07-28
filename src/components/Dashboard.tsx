@@ -1,22 +1,38 @@
-import { useState } from "react";
-import { useFirestore, useFirestoreCollectionData } from "reactfire";
+import React, { useState } from "react";
+import { useFirestore, useFirestoreCollectionData, useUser } from "reactfire";
 import { OrderOfBattleDef } from "../Types/OrderOfBattleDef";
+import TextInput from "./common/TextInput";
 
 export default function Dashboard() {
   
   const [showAddForm, setShowAddForm] = useState(false)
+  const { data: user} = useUser();
+  const [orders, setOrders] = useState<OrderOfBattleDef[]>([]) 
+  const [newOrder, setNewOrder] = useState('')
+  const cartInput = {ref: 'test',label: 'Order Name'}
+
+  // firebase stuff
   const ordersCollection = useFirestore()
     .collection('ordersOfBattle')
 
-  const getOrders = () => {
-    ordersCollection.get()
-  }
+  const fireOrders = useFirestoreCollectionData(ordersCollection)
 
-  const addOrder = (orderName: string, data: OrderOfBattleDef) => {
-    ordersCollection.doc(orderName).set(data)
+  const getOrders = () => {
+    return fireOrders
   }
 
   
+
+  const addOrder = (orderName: string) => {
+    ordersCollection.doc(orderName).set({owner: user.uid})
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line
+    setNewOrder(e.target.value)
+  }
+
+  console.log(getOrders())
 
   return (
     <div>
@@ -27,11 +43,16 @@ export default function Dashboard() {
           <button onClick={() => setShowAddForm(!showAddForm)}>Add Order</button>
           {showAddForm && 
             <div>
-              <h5>you can see me</h5>
-            </div>}
+              <TextInput cardInput={cartInput} value={newOrder} onChange={handleChange}/>
+              <button onClick={() => addOrder(newOrder)} >add</button>
+            </div>
+            }
         </div>
-        <div>
-        </div>
+        <ul>
+          { orders.map( (order) => {
+            return <li>{order.name}</li>
+          })}
+        </ul>
       </div>
       
     </div>
