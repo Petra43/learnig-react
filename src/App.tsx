@@ -32,7 +32,7 @@ function SignIn() {
   //  return <h1>add loading spinner</h1>
   //}
   
-  if(signInCheckResult.signedIn === true) {
+  if(signInCheckResult && signInCheckResult.signedIn === true) {
     return <Dashboard />
   } else {
     return <LogInForm />
