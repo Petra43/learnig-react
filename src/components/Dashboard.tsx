@@ -1,59 +1,79 @@
 import React, { useState } from "react";
 import { useFirestore, useFirestoreCollectionData, useUser } from "reactfire";
-import { OrderOfBattleDef } from "../Types/OrderOfBattleDef";
 import TextInput from "./common/TextInput";
+import OdrerOfBattle from "./crusade/OrderOfBattle";
 
 export default function Dashboard() {
   
-  const [showAddForm, setShowAddForm] = useState(false)
-  const { data: user} = useUser();
-  const [orders, setOrders] = useState<OrderOfBattleDef[]>([]) 
-  const [newOrder, setNewOrder] = useState('')
-  const cartInput = {ref: 'test',label: 'Order Name'}
-
-  // firebase stuff
-  const ordersCollection = useFirestore()
-    .collection('ordersOfBattle')
-
-  const fireOrders = useFirestoreCollectionData(ordersCollection)
-
-  const getOrders = () => {
-    return fireOrders
-  }
-
+  // states 
+  const [showAddForm, setShowAddForm] = useState<boolean>(false)
+    //const [orders, setOrders] = useState<OrderOfBattleDef[]>([])
+  const [newOrder, setNewOrder] = useState<string>('')
+  const [selectedOrder, setSelectedOrder] = useState<string>('')
   
+  const { data: user} = useUser();
+  const cartInput = {ref: 'test',label: 'Order Name'}
+  
+  // Load ordersOfBattle  // look into ways to do this outside of the component.
+  const ordersCollection = useFirestore()
+    .collection('ordersOfBattle');
+  // ISSUE the where is not retrieving the relevant data
+  const ordersQuery = ordersCollection.orderBy('owner', 'asc')//.where('owner', '==', user.uid )
+  const {status, data: fireOrders} = useFirestoreCollectionData(ordersQuery, {idField: 'docID'})
 
+
+  // add a new orderOfBattle
   const addOrder = (orderName: string) => {
-    ordersCollection.doc(orderName).set({owner: user.uid})
+    ordersCollection.add({
+      owner: user.uid,
+      name: orderName,
+      cards: [],
+    })
   }
+
+  console.log(user.uid)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // eslint-disable-next-line
     setNewOrder(e.target.value)
   }
 
-  console.log(getOrders())
-
   return (
     <div>
-      <h2> Dashboard</h2>
-      <div>
+      { !selectedOrder &&
         <div>
-          <h3>Orders of Battle</h3>
-          <button onClick={() => setShowAddForm(!showAddForm)}>Add Order</button>
-          {showAddForm && 
+          <h2> Dashboard</h2>
+          <div>
             <div>
-              <TextInput cardInput={cartInput} value={newOrder} onChange={handleChange}/>
-              <button onClick={() => addOrder(newOrder)} >add</button>
+              <h3>Orders of Battle</h3>
+              { !showAddForm && <button onClick={() => setShowAddForm(true)}>Add Order</button> }
+              {showAddForm && 
+                <div>
+                  <TextInput cardInput={cartInput} value={newOrder} onChange={handleChange}/>
+                  <button onClick={() => addOrder(newOrder)} >add</button>
+                  <button onClick={() => setShowAddForm(false)}>cancel</button>
+                </div>
+                }
             </div>
-            }
+            <ul>
+              { status === 'loading' && <li>Loading orders...</li>}
+              { fireOrders && fireOrders.map( (order) => {
+                return (
+                  <li 
+                    key={order.docID as string} 
+                    onClick={() => setSelectedOrder(order.docID as string)}>
+                      {order.name as string}
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
         </div>
-        <ul>
-          { orders.map( (order) => {
-            return <li>{order.name}</li>
-          })}
-        </ul>
-      </div>
+      }
+      { selectedOrder && 
+      <>
+        <button onClick={ () => setSelectedOrder('')}>Dashboard</button>
+        <OdrerOfBattle orderId={selectedOrder} />
+      </>}
       
     </div>
   );

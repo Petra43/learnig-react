@@ -14,7 +14,6 @@ function App() {
     <div className="App">
       <NavBar />
       <SignIn />
-      <OdrerOfBattle />
     </div>
   );
 }
