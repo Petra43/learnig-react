@@ -1,5 +1,3 @@
-import { type } from "os";
-
 // define the UnitCard type and the default variables 
 export class UnitCard{
   // section 1: identifiers

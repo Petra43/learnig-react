@@ -1,0 +1,200 @@
+import React from "react";
+import { UnitCard } from "../../Types/UnitCard";
+import CrusadeCard from "./CrusadeCard";
+import _ from 'lodash';
+import { CardInputs } from "../../constants/StringConstants";
+import { useFirestore } from "reactfire";
+
+// this component was origonaly a class but i changed it to a function to use reactfire hooks
+
+export default class OdrerOfBattle extends React.Component<{
+  order: string
+}, {
+  cards: UnitCard[], 
+  cardList: JSX.Element[],
+  selectedCard: number;
+}> {
+
+  constructor(props: any) {
+    super(props);    
+    this.state = {
+      cards: [],
+      cardList: [],
+      selectedCard: 0,
+    }
+
+    //bind functions
+    this.updateSelectedCard = this.updateSelectedCard.bind(this)
+  }
+
+  async selectCard(e: React.MouseEvent, cardID: number) {
+    e.preventDefault()
+    await this.setState({selectedCard: cardID})
+  }
+
+  getCard(cardID: number): UnitCard{
+    let unitCard: UnitCard = this.state.cards.find(card => card.id === cardID) || new UnitCard()
+
+    return unitCard
+  }
+
+  componentDidMount() {
+    this.renderUnitList();
+  }
+
+  renderUnitList() {
+    this.setState({ cardList: this.state.cards.map((card) => {
+      return (
+        <li key={card.id} onClick={(e) => this.selectCard(e, card.id)} >{card.powerRating}: {card.unitName}</li>
+      )
+    })})
+  }
+
+  /**
+   * add an new unit card to the Cards state and make it the selected card
+   * @param e React MouseEvent
+   */
+  async addUnit(e: React.MouseEvent) {
+    e.preventDefault();
+
+    let cardID: number = 0;
+
+    // Make sure selected ID is unique
+    while(cardID === 0 && !this.state.cards.some(card => card.id === cardID)) {
+      cardID = this.generateID()
+    }
+
+    let newCard: UnitCard = new UnitCard();
+    newCard.id = cardID;
+    let cards = _.clone(this.state.cards);
+    cards.push(newCard);
+    await this.setState({cards: cards, selectedCard: cardID})
+    this.renderUnitList()
+  }
+
+  /**
+   * @returns a random number between 1 and 9990
+   */
+  generateID():number {
+    const min:number = 1;
+    const max:number = 9999;
+    let num:number = Math.floor(Math.random() * (max - min) + min)
+    return num;
+  }
+
+  /**
+   * update the selected card with the change from the CrusadeCard component
+   * @param e React ChangeEvent
+   */
+  async updateSelectedCard(e: React.ChangeEvent<HTMLInputElement>) {
+    let updatedCard: UnitCard = _.cloneDeep(this.getCard(this.state.selectedCard));
+    let newValue: string = e.target.value;
+    let cards: UnitCard[] = _.clone(this.state.cards);
+    let cardIndex = cards.findIndex(card => card.id === this.state.selectedCard);
+
+    // update the changed attribute
+    switch(e.target.name) {
+      // section: id
+      case CardInputs.unitName.ref:
+        updatedCard.unitName = newValue;
+        break;
+      case CardInputs.battlefieldRole.ref:
+        updatedCard.battlefieldRole = newValue;
+        break;
+      case CardInputs.faction.ref: 
+        updatedCard.crusadeFaction = newValue;
+        break;
+      case CardInputs.keywords.ref:
+        updatedCard.selectableKeyWords = newValue.split(' ')
+        break;
+
+      // section: points
+      case CardInputs.powerRating.ref:
+        updatedCard.powerRating = parseInt(newValue);
+        break;
+      case CardInputs.experience.ref:
+        updatedCard.exp = parseInt(newValue);
+        break;
+      case CardInputs.crusadePoints.ref:
+        updatedCard.crusadePoints = parseInt(newValue);
+        break;
+
+      // section: information
+      case CardInputs.unitType.ref:
+        updatedCard.unitType = newValue;
+        break;
+      case CardInputs.equipment.ref:
+        updatedCard.equipment = newValue.split(' ');
+        break;
+      case CardInputs.psychicPowers.ref: 
+        updatedCard.psychicPowers = newValue.split(' ');
+        break;
+      case CardInputs.warlordTraits.ref: 
+        updatedCard.warlordTraits = newValue.split(' ');
+        break;
+      case CardInputs.relics.ref: 
+        updatedCard.relics = newValue.split(' ');
+        break;
+
+      // section: tallies
+      case CardInputs.battlesPlayed.ref:
+        updatedCard.battlesPlayed = parseInt(newValue);
+        break;
+      case CardInputs.battlesSurvived.ref:
+        updatedCard.battlesSurvived = parseInt(newValue);
+        break;
+      case CardInputs.unitsDestroyed.ref:
+        updatedCard.enemyUnitsDestroyed = parseInt(newValue);
+        break;
+      case CardInputs.unitDestroyedWithPsychicPowers.ref:
+        updatedCard.enemyUnitsDestroyedWithPsychicPowers= parseInt(newValue);
+        break;
+      case CardInputs.unitDestroyedWithRangedWeapons.ref:
+        updatedCard.enemyUnitsDestroyedWithRangedWeapons = parseInt(newValue);
+        break;
+      case CardInputs.unitDestroyedWithMeleeWeapons.ref:
+        updatedCard.enemyUnitsDestroyedWithMeleeWeapons= parseInt(newValue);
+        break;
+
+      //section: rank
+      case CardInputs.rank.ref: 
+        // TODO: make the bellow work in ts 
+        //updatedCard.rank = newValue;
+        break;
+      case CardInputs.battleHonours.ref:
+        updatedCard.battleHonours = newValue.split(' ');
+        break;
+      case CardInputs.battleScars.ref:
+        updatedCard.battleScars = newValue.split(' ')
+    }    
+
+    cards[cardIndex] = updatedCard;
+    await this.setState({cards});
+    this.renderUnitList();
+  }
+
+  render(){
+    return (
+      <section>
+        <h2>Order Of Battle</h2>
+        <div className="container flex">
+          <div className="card-list">
+            <h3>Crusade Cards</h3>
+            <button onClick={(e) => this.addUnit(e)} >add new unit</button>
+            <ul>
+              {this.state.cardList}
+            </ul>
+          </div>
+          <div className="selected-card">
+            {this.state.selectedCard !== 0 && 
+              <CrusadeCard 
+                key={this.state.selectedCard} 
+                card={_.cloneDeep(this.getCard(this.state.selectedCard))} 
+                onCardChange={this.updateSelectedCard} />
+            }
+          </div>
+        </div>
+      </section>
+    )
+  }
+}

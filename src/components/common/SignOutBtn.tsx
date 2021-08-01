@@ -4,10 +4,16 @@ export default function SignOutBtn() {
   const auth = useAuth();
   const {data: signInCheckResult} = useSigninCheck();
   const signOut = async () => auth.signOut();
-  
+
+  let signedIn = signInCheckResult.signedIn === true
+  if(signedIn === undefined) {
+    signedIn = false
+  }
+
+
   return (
     <>
-      { signInCheckResult.signedIn === true && <button onClick={signOut}>logOut</button>}
+      { signedIn && <button onClick={signOut}>logOut</button>}
     </>
   )
-}
+} 

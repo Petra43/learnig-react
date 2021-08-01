@@ -7,7 +7,7 @@ export type CardInputText = {
     label: string;
   };
   value: string;
-  onChange: (e: React.ChangeEvent) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export type CardInputNumber = {

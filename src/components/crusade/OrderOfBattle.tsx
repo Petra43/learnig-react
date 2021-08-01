@@ -1,91 +1,100 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UnitCard } from "../../Types/UnitCard";
 import CrusadeCard from "./CrusadeCard";
 import _ from 'lodash';
 import { CardInputs } from "../../constants/StringConstants";
+import { useFirestore, useFirestoreDocData } from "reactfire";
+import { OrderOfBattleDef } from "../../Types/OrderOfBattleDef";
 
-export default class OdrerOfBattle extends React.Component<{}, {
-  cards: UnitCard[], 
-  cardList: JSX.Element[],
-  selectedCard: number;
-}> {
+// this component was originally a class but i changed it to a function to use reactfire hooks
 
-  constructor(props: any) {
-    super(props);    
-    this.state = {
-      cards: [],
-      cardList: [],
-      selectedCard: 0,
+export default function OdrerOfBattle( props: {
+  orderId: string;
+}) { 
+
+  // State
+  const [cards, setCards] = useState<UnitCard[]>([]);
+  const [selectedCard, setSelectedCard] = useState<number>(0);
+
+  // firebase
+  const orderOfBattleRef = useFirestore()
+    .collection('ordersOfBattle')
+    .doc(props.orderId)
+    // TODO: find out how types work with reactfire
+  const {status, data: order} = useFirestoreDocData<any>(orderOfBattleRef)
+
+  useEffect( () =>{ 
+    if(order) {
+      setCards(order.crusadeCards)
     }
+  },[order]) // when order updates run effect
 
-    //bind functions
-    this.updateSelectedCard = this.updateSelectedCard.bind(this)
-  }
+  // functions 
 
-  async selectCard(e: React.MouseEvent, cardID: number) {
-    e.preventDefault()
-    await this.setState({selectedCard: cardID})
-  }
-
-  getCard(cardID: number): UnitCard{
-    let unitCard: UnitCard = this.state.cards.find(card => card.id === cardID) || new UnitCard()
-
-    return unitCard
-  }
-
-  componentDidMount() {
-    this.renderUnitList();
-  }
-
-  renderUnitList() {
-    this.setState({ cardList: this.state.cards.map((card) => {
-      return (
-        <li key={card.id} onClick={(e) => this.selectCard(e, card.id)} >{card.powerRating}: {card.unitName}</li>
-      )
-    })})
+  const saveCards = () => {
+    const newOrder: OrderOfBattleDef = _.clone(order);
+    const cardsClone = _.clone(cards);
+    newOrder.crusadeCards = cardsClone.map( (card) => _.toPlainObject(card))
+    console.log(newOrder)
+    orderOfBattleRef.set(newOrder)
   }
 
   /**
-   * add an new unit card to the Cards state and make it the selected card
-   * @param e React MouseEvent
+   * @param e MouseEvent
+   * @param cardID the identifier for the card that was clicked on
    */
-  async addUnit(e: React.MouseEvent) {
+  const selectCard = (e: React.MouseEvent, cardID: number) => {
     e.preventDefault();
+    setSelectedCard(cardID);
+  };
 
+  /**
+   * @param cardID the identifier for the card that you want
+   * @returns a UnitCard object that has an id matching the input
+   */
+  const getCard = (cardID: number): UnitCard => {
+    return cards.find(card => card.id === cardID) || new UnitCard()
+  }
+
+  /**
+   * add a new unit to the cards array
+   * @param e MouseEvent
+   */
+  const addUnit = async(e: React.MouseEvent) => {
+    e.preventDefault()
     let cardID: number = 0;
 
     // Make sure selected ID is unique
-    while(cardID === 0 && !this.state.cards.some(card => card.id === cardID)) {
-      cardID = this.generateID()
+    while(cardID === 0 && !cards.some(card => card.id === cardID)) {
+      cardID = generateID()
     }
 
     let newCard: UnitCard = new UnitCard();
     newCard.id = cardID;
-    let cards = _.clone(this.state.cards);
-    cards.push(newCard);
-    await this.setState({cards: cards, selectedCard: cardID})
-    this.renderUnitList()
+    let cardsClone = _.clone(cards);
+    cardsClone.push(newCard);
+    setCards(cardsClone);
+  }
+  
+  /**
+   * Generate a number for an id
+   * @returns a random number under 999999
+   */
+  const generateID = ():number => {
+    const min: number = 1;
+    const max: number = 999999;
+    return Math.floor(Math.random() * (max - min) + min)
   }
 
   /**
-   * @returns a random number between 1 and 9990
+   * Updates the fields on the selected card 
+   * @param e event triggered from HTMLInputElement
    */
-  generateID():number {
-    const min:number = 1;
-    const max:number = 9999;
-    let num:number = Math.floor(Math.random() * (max - min) + min)
-    return num;
-  }
-
-  /**
-   * update the selected card with the change from the CrusadeCard component
-   * @param e React ChangeEvent
-   */
-  async updateSelectedCard(e: React.ChangeEvent<HTMLInputElement>) {
-    let updatedCard: UnitCard = _.cloneDeep(this.getCard(this.state.selectedCard));
+  const updateSelectedCard = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let updatedCard: UnitCard = _.cloneDeep(getCard(selectedCard));
     let newValue: string = e.target.value;
-    let cards: UnitCard[] = _.clone(this.state.cards);
-    let cardIndex = cards.findIndex(card => card.id === this.state.selectedCard);
+    let cardsClone: UnitCard[] = _.clone(cards);
+    let cardIndex = cardsClone.findIndex(card => card.id === selectedCard);
 
     // update the changed attribute
     switch(e.target.name) {
@@ -163,33 +172,35 @@ export default class OdrerOfBattle extends React.Component<{}, {
         updatedCard.battleScars = newValue.split(' ')
     }    
 
-    cards[cardIndex] = updatedCard;
-    await this.setState({cards});
-    this.renderUnitList();
+    cardsClone[cardIndex] = updatedCard;
+    setCards(cardsClone);
   }
 
-  render(){
-    return (
-      <section>
-        <h2>Order Of Battle</h2>
-        <div className="container flex">
-          <div className="card-list">
-            <h3>Crusade Cards</h3>
-            <button onClick={(e) => this.addUnit(e)} >add new unit</button>
-            <ul>
-              {this.state.cardList}
-            </ul>
-          </div>
-          <div className="selected-card">
-            {this.state.selectedCard !== 0 && 
-              <CrusadeCard 
-                key={this.state.selectedCard} 
-                card={_.cloneDeep(this.getCard(this.state.selectedCard))} 
-                onCardChange={this.updateSelectedCard} />
-            }
-          </div>
+  return (
+    <section>
+      {order && <h2>{order.name}</h2>}
+      <div className="container flex">
+        <div className="card-list">
+          <h3>Crusade Cards</h3>
+          <button onClick={(e) => addUnit(e)} >add new unit</button>
+          <ul>
+            { cards && cards.map( card => {
+                return <li key={card.id} onClick={(e) => selectCard(e, card.id)} >{card.powerRating}: {card.unitName}</li> 
+            })}
+          </ul>
+          <button onClick={() => saveCards()} >Save cards</button>
         </div>
-      </section>
-    )
-  }
+        <div className="selected-card">
+          {selectedCard !== 0 && 
+            <>
+              <CrusadeCard 
+                key={selectedCard} 
+                card={_.cloneDeep(getCard(selectedCard))} 
+                onCardChange={updateSelectedCard} />
+            </>
+          }
+        </div>
+      </div>
+    </section>
+  )
 }
