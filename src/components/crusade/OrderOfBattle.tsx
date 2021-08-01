@@ -3,28 +3,63 @@ import { UnitCard } from "../../Types/UnitCard";
 import CrusadeCard from "./CrusadeCard";
 import _ from 'lodash';
 import { CardInputs } from "../../constants/StringConstants";
+import { useFirestore, useFirestoreDocData } from "reactfire";
+import { OrderOfBattleDef } from "../../Types/OrderOfBattleDef";
 
-// this component was origonaly a class but i changed it to a function to use reactfire hooks
+// this component was originally a class but i changed it to a function to use reactfire hooks
 
 export default function OdrerOfBattle( props: {
   orderId: string;
 }) { 
+
+  // State
   const [cards, setCards] = useState<UnitCard[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>(0);
 
-  useEffect( () => {})
+  // firebase
+  const orderOfBattleRef = useFirestore()
+    .collection('ordersOfBattle')
+    .doc(props.orderId)
+    // TODO: find out how types work with reactfire
+  const {status, data: order} = useFirestoreDocData<any>(orderOfBattleRef)
 
+  useEffect( () =>{ 
+    if(order) {
+      setCards(order.crusadeCards)
+    }
+  },[order]) // when order updates run effect
 
   // functions 
-  const selectCard = async(e: React.MouseEvent, cardID: number) => {
+
+  const saveCards = () => {
+    const newOrder: OrderOfBattleDef = _.clone(order);
+    const cardsClone = _.clone(cards);
+    newOrder.crusadeCards = cardsClone.map( (card) => _.toPlainObject(card))
+    console.log(newOrder)
+    orderOfBattleRef.set(newOrder)
+  }
+
+  /**
+   * @param e MouseEvent
+   * @param cardID the identifier for the card that was clicked on
+   */
+  const selectCard = (e: React.MouseEvent, cardID: number) => {
     e.preventDefault();
-    await setSelectedCard(cardID);
+    setSelectedCard(cardID);
   };
 
+  /**
+   * @param cardID the identifier for the card that you want
+   * @returns a UnitCard object that has an id matching the input
+   */
   const getCard = (cardID: number): UnitCard => {
     return cards.find(card => card.id === cardID) || new UnitCard()
   }
 
+  /**
+   * add a new unit to the cards array
+   * @param e MouseEvent
+   */
   const addUnit = async(e: React.MouseEvent) => {
     e.preventDefault()
     let cardID: number = 0;
@@ -40,13 +75,21 @@ export default function OdrerOfBattle( props: {
     cardsClone.push(newCard);
     setCards(cardsClone);
   }
-
+  
+  /**
+   * Generate a number for an id
+   * @returns a random number under 999999
+   */
   const generateID = ():number => {
     const min: number = 1;
-    const max: number = 9999;
+    const max: number = 999999;
     return Math.floor(Math.random() * (max - min) + min)
   }
 
+  /**
+   * Updates the fields on the selected card 
+   * @param e event triggered from HTMLInputElement
+   */
   const updateSelectedCard = (e: React.ChangeEvent<HTMLInputElement>) => {
     let updatedCard: UnitCard = _.cloneDeep(getCard(selectedCard));
     let newValue: string = e.target.value;
@@ -135,23 +178,26 @@ export default function OdrerOfBattle( props: {
 
   return (
     <section>
-      <h2>Order Of Battle</h2>
+      {order && <h2>{order.name}</h2>}
       <div className="container flex">
         <div className="card-list">
           <h3>Crusade Cards</h3>
           <button onClick={(e) => addUnit(e)} >add new unit</button>
           <ul>
-            { cards.map( card => {
+            { cards && cards.map( card => {
                 return <li key={card.id} onClick={(e) => selectCard(e, card.id)} >{card.powerRating}: {card.unitName}</li> 
             })}
           </ul>
+          <button onClick={() => saveCards()} >Save cards</button>
         </div>
         <div className="selected-card">
           {selectedCard !== 0 && 
-            <CrusadeCard 
-              key={selectedCard} 
-              card={_.cloneDeep(getCard(selectedCard))} 
-              onCardChange={updateSelectedCard} />
+            <>
+              <CrusadeCard 
+                key={selectedCard} 
+                card={_.cloneDeep(getCard(selectedCard))} 
+                onCardChange={updateSelectedCard} />
+            </>
           }
         </div>
       </div>

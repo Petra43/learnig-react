@@ -27,11 +27,9 @@ export default function Dashboard() {
     ordersCollection.add({
       owner: user.uid,
       name: orderName,
-      cards: [],
+      crusadeCards: [],
     })
   }
-
-  console.log(user.uid)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewOrder(e.target.value)
