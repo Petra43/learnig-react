@@ -15,6 +15,8 @@ Create a web app is that it can be used to manage crusade armies in warhammer 40
 current
 - Are able to create multiple orders of battle(a list of warhammer units that can be used in games)
 - Create in an order of battle units and keep track of their equipment, upgrades and battle statistics
+
+
 possible features
 - build armies with units in an order of battle
 - keep track of individual battle statistics
@@ -27,7 +29,9 @@ current
 - OrderOfBattle component manages the crusade cards(units) in an order of battle
 - crusadeCard component: can edit the details of an individual unit
 - Input components: reduces the repetition when adding lots of inputs to a component
-future
+
+
+planed
 - enable the deletion of ordersOfBattle and Units
 - flesh out the css to make it responsive and enhance usability
 - A multi-select/ tag component for the crusade card fields that can have multiple values
