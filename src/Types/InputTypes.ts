@@ -3,18 +3,18 @@ import React from "react";
 
 export type CardInputText = {
   cardInput: {
-    ref: string;
-    label: string;
-  };
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    ref: string,
+    label: string,
+  },
+  value: string,
+  onChange: (value: string, inputRef: string) => void,
 }
 
 export type CardInputNumber = {
   cardInput: {
-    ref: string;
-    label: string;
+    ref: string,
+    label: string,
   };
-  value: number;
-  onChange: (e: React.ChangeEvent) => void;
+  value: number,
+  onChange: (value: string, inputRef: string) => void,
 }

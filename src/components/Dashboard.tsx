@@ -31,8 +31,8 @@ export default function Dashboard() {
     })
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewOrder(e.target.value)
+  const handleChange = (value: string) => {
+    setNewOrder(value)
   }
 
   return (
