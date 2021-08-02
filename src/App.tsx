@@ -2,7 +2,6 @@ import { useSigninCheck } from 'reactfire';
 
 
 import './App.css';
-import OdrerOfBattle from './components/crusade/OrderOfBattle';
 import Dashboard from './components/Dashboard';
 import LogInForm from './components/LoginForm';
 import NavBar from './components/structural/NavBar';

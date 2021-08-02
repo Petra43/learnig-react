@@ -90,14 +90,14 @@ export default function OdrerOfBattle( props: {
    * Updates the fields on the selected card 
    * @param e event triggered from HTMLInputElement
    */
-  const updateSelectedCard = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateSelectedCard = (changedValue: string, inputRef: string) => {
     let updatedCard: UnitCard = _.cloneDeep(getCard(selectedCard));
-    let newValue: string = e.target.value;
+    let newValue: string = changedValue;
     let cardsClone: UnitCard[] = _.clone(cards);
     let cardIndex = cardsClone.findIndex(card => card.id === selectedCard);
 
     // update the changed attribute
-    switch(e.target.name) {
+    switch(inputRef) {
       // section: id
       case CardInputs.unitName.ref:
         updatedCard.unitName = newValue;
@@ -109,7 +109,7 @@ export default function OdrerOfBattle( props: {
         updatedCard.crusadeFaction = newValue;
         break;
       case CardInputs.keywords.ref:
-        updatedCard.selectableKeyWords = newValue.split(' ')
+        updatedCard.selectableKeyWords = newValue;
         break;
 
       // section: points
@@ -128,16 +128,16 @@ export default function OdrerOfBattle( props: {
         updatedCard.unitType = newValue;
         break;
       case CardInputs.equipment.ref:
-        updatedCard.equipment = newValue.split(' ');
+        updatedCard.equipment = newValue;
         break;
       case CardInputs.psychicPowers.ref: 
-        updatedCard.psychicPowers = newValue.split(' ');
+        updatedCard.psychicPowers = newValue;
         break;
       case CardInputs.warlordTraits.ref: 
-        updatedCard.warlordTraits = newValue.split(' ');
+        updatedCard.warlordTraits = newValue;
         break;
       case CardInputs.relics.ref: 
-        updatedCard.relics = newValue.split(' ');
+        updatedCard.relics = newValue;
         break;
 
       // section: tallies
@@ -166,10 +166,10 @@ export default function OdrerOfBattle( props: {
         //updatedCard.rank = newValue;
         break;
       case CardInputs.battleHonours.ref:
-        updatedCard.battleHonours = newValue.split(' ');
+        updatedCard.battleHonours = newValue;
         break;
       case CardInputs.battleScars.ref:
-        updatedCard.battleScars = newValue.split(' ')
+        updatedCard.battleScars = newValue;
     }    
 
     cardsClone[cardIndex] = updatedCard;

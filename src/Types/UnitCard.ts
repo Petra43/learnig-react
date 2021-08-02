@@ -4,7 +4,7 @@ export class UnitCard{
   unitName: string = 'Unit name';
   battlefieldRole: string = '';
   crusadeFaction: string = '';
-  selectableKeyWords: string[] = [];
+  selectableKeyWords: string = '';
   id: number = 0;
 
   // section 2: points
@@ -14,11 +14,11 @@ export class UnitCard{
 
   //section 3: information
   unitType: string = '';
-  equipment: string[] = [];
-  psychicPowers: string[] = [];
-  warlordTraits: string[] = [];
-  relics: string[] = [];
-  otherUpgradesAndSelectableAbilities: string[] = [];
+  equipment: string = '';
+  psychicPowers: string = '';
+  warlordTraits: string = '';
+  relics: string = '';
+  otherUpgradesAndSelectableAbilities: string = '';
 
   //section 4: combat tallis
   battlesPlayed: number = 0;
@@ -30,8 +30,8 @@ export class UnitCard{
   
   //section 5: rank
   rank: rank = 'Battle Ready'
-  battleHonours: string[] = [];
-  battleScars: string[] = [];
+  battleHonours: string = '';
+  battleScars: string = '';
 
 }
 

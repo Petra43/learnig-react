@@ -4,6 +4,7 @@ import { CardInputs } from "../../constants/StringConstants";
 import { UnitCard } from "../../Types/UnitCard";
 import MultiSelect from "../common/MultiSelectInput";
 import NumberInput from "../common/NumberInput";
+import { ranks } from "../../constants/listConstants";
 
 /**
  * Component that manages the displaying and editing of crusade cards
@@ -37,7 +38,9 @@ export default function CrusadeCard(props: {
           value={card.crusadeFaction} 
           onChange={props.onCardChange} />
         <MultiSelect 
-          cardInput={CardInputs.keywords} />
+          cardInput={CardInputs.keywords}
+          value={card.selectableKeyWords} 
+          onChange={props.onCardChange} />
         {
           // section 2
         }
@@ -61,13 +64,21 @@ export default function CrusadeCard(props: {
           value={card.unitType}
           onChange={props.onCardChange} />
         <MultiSelect 
-          cardInput={CardInputs.equipment} />
+          cardInput={CardInputs.equipment} 
+          value={card.equipment}
+          onChange={props.onCardChange} />
         <MultiSelect 
-          cardInput={CardInputs.psychicPowers} />
+          cardInput={CardInputs.psychicPowers} 
+          value={card.psychicPowers}
+          onChange={props.onCardChange} />
         <MultiSelect 
-          cardInput={CardInputs.warlordTraits} />
+          cardInput={CardInputs.warlordTraits} 
+          value={card.warlordTraits}
+          onChange={props.onCardChange} />
         <MultiSelect 
-          cardInput={CardInputs.relics} />
+          cardInput={CardInputs.relics} 
+          value={card.relics}
+          onChange={props.onCardChange} />
         {
           // section 4
         }
@@ -99,11 +110,19 @@ export default function CrusadeCard(props: {
           // section 5
         }
         <MultiSelect 
-          cardInput={CardInputs.rank} />
+          cardInput={CardInputs.rank} 
+          value={card.rank}
+          onChange={props.onCardChange}
+          whitelist={ranks} 
+          mode="select"/>
         <MultiSelect
-          cardInput={CardInputs.battleHonours} />
+          cardInput={CardInputs.battleHonours} 
+          value={card.battleHonours}
+          onChange={props.onCardChange} />
         <MultiSelect
-          cardInput={CardInputs.battleScars} />
+          cardInput={CardInputs.battleScars} 
+          value={card.battleScars}
+          onChange={props.onCardChange} />
       </form>
     </div>
   )
