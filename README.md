@@ -4,8 +4,6 @@ I am using this project to apply what i have learned in react tutorials.
 
 ## What im building: Warhammer 40k crusade manager.
 
-
-
 ### The Goal
 
 Create a web app is that it can be used to manage crusade armies in warhammer 40k.
@@ -29,16 +27,13 @@ current
 - OrderOfBattle component manages the crusade cards(units) in an order of battle
 - crusadeCard component: can edit the details of an individual unit
 - Input components: reduces the repetition when adding lots of inputs to a component
+- A multi-select/ tag component for the crusade card fields that can have multiple values
 
 
 planed
 - enable the deletion of ordersOfBattle and Units
 - flesh out the css to make it responsive and enhance usability
-- A multi-select/ tag component for the crusade card fields that can have multiple values
 - allow a user to log out
-
-
-
 
 
 ## Getting Started with Create React App: readme from npx create-react-app
