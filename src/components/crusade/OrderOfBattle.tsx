@@ -65,13 +65,18 @@ export default function OdrerOfBattle( props: {
     let cardID: number = 0;
 
     // Make sure selected ID is unique
-    while(cardID === 0 && !cards.some(card => card.id === cardID)) {
+    if(cards){ // when a card exists
+      while(cardID === 0 && !cards.some(card => card.id === cardID)) {
+        cardID = generateID()
+      }
+
+    } else { // when there are no cards
       cardID = generateID()
     }
-
+    
     let newCard: UnitCard = new UnitCard();
     newCard.id = cardID;
-    let cardsClone = _.clone(cards);
+    let cardsClone = cards? _.clone(cards) : [];
     cardsClone.push(newCard);
     setCards(cardsClone);
   }
@@ -176,6 +181,17 @@ export default function OdrerOfBattle( props: {
     setCards(cardsClone);
   }
 
+  /**
+   * 
+   * @param id the id of the card that you want to remove
+   */
+  const deleteCard = (id: number) => {
+    let cardsClone = _.clone(cards);
+    const index = cardsClone.findIndex( card => card.id === id )
+    cardsClone.splice(index, 1)
+    setCards(cardsClone);
+  }
+
   return (
     <section>
       {order && <h2>{order.name}</h2>}
@@ -185,7 +201,12 @@ export default function OdrerOfBattle( props: {
           <button onClick={(e) => addUnit(e)} >add new unit</button>
           <ul>
             { cards && cards.map( card => {
-                return <li key={card.id} onClick={(e) => selectCard(e, card.id)} >{card.powerRating}: {card.unitName}</li> 
+                return (
+                <li key={card.id} onClick={(e) => selectCard(e, card.id)} >
+                  {card.powerRating}: {card.unitName} 
+                  <button onClick={() => deleteCard(card.id)} >delete</button>
+                </li> 
+                )
             })}
           </ul>
           <button onClick={() => saveCards()} >Save cards</button>
