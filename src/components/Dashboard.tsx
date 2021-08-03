@@ -32,7 +32,8 @@ export default function Dashboard() {
   }
 
   const deleteOrder = (orderId: string) => {
-    ordersCollection.doc().delete()
+    console.log('clicked')
+    ordersCollection.doc(orderId).delete()
   }
 
   const handleChange = (value: string) => {
@@ -60,11 +61,9 @@ export default function Dashboard() {
               { status === 'loading' && <li>Loading orders...</li>}
               { fireOrders && fireOrders.map( (order) => {
                 return (
-                  <li 
-                    key={order.docID as string} 
-                    onClick={() => setSelectedOrder(order.docID as string)}>
-                      {order.name as string}
-                      <button onClick={() => deleteOrder(order.docID as string)}>delete</button>
+                  <li key={order.docID as string} >
+                    <span onClick={() => setSelectedOrder(order.docID as string)}>{order.name as string}</span>
+                    <button onClick={() => deleteOrder(order.docID as string)}>delete</button>
                   </li>
                 )
               })}

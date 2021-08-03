@@ -202,14 +202,14 @@ export default function OdrerOfBattle( props: {
           <ul>
             { cards && cards.map( card => {
                 return (
-                <li key={card.id} onClick={(e) => selectCard(e, card.id)} >
-                  {card.powerRating}: {card.unitName} 
+                <li key={card.id}  >
+                  <span onClick={(e) => selectCard(e, card.id)}>{card.powerRating}: {card.unitName} </span>
                   <button onClick={() => deleteCard(card.id)} >delete</button>
                 </li> 
                 )
             })}
           </ul>
-          <button onClick={() => saveCards()} >Save cards</button>
+          <button onClick={() => saveCards()} >Save changes</button>
         </div>
         <div className="selected-card">
           {selectedCard !== 0 && 
