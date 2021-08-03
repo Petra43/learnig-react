@@ -31,6 +31,10 @@ export default function Dashboard() {
     })
   }
 
+  const deleteOrder = (orderId: string) => {
+    ordersCollection.doc().delete()
+  }
+
   const handleChange = (value: string) => {
     setNewOrder(value)
   }
@@ -60,6 +64,7 @@ export default function Dashboard() {
                     key={order.docID as string} 
                     onClick={() => setSelectedOrder(order.docID as string)}>
                       {order.name as string}
+                      <button onClick={() => deleteOrder(order.docID as string)}>delete</button>
                   </li>
                 )
               })}
