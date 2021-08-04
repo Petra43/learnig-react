@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFirestore, useFirestoreCollectionData, useUser } from "reactfire";
 import TextInput from "./common/TextInput";
 import OdrerOfBattle from "./crusade/OrderOfBattle";
@@ -10,7 +10,6 @@ export default function Dashboard() {
     //const [orders, setOrders] = useState<OrderOfBattleDef[]>([])
   const [newOrder, setNewOrder] = useState<string>('')
   const [selectedOrder, setSelectedOrder] = useState<string>('')
-  
   const { data: user} = useUser();
   const cartInput = {ref: 'test',label: 'Order Name'}
   
