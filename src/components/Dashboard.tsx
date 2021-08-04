@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFirestore, useFirestoreCollectionData, useUser } from "reactfire";
 import TextInput from "./common/TextInput";
 import OdrerOfBattle from "./crusade/OrderOfBattle";
@@ -10,7 +10,6 @@ export default function Dashboard() {
     //const [orders, setOrders] = useState<OrderOfBattleDef[]>([])
   const [newOrder, setNewOrder] = useState<string>('')
   const [selectedOrder, setSelectedOrder] = useState<string>('')
-  
   const { data: user} = useUser();
   const cartInput = {ref: 'test',label: 'Order Name'}
   
@@ -29,6 +28,11 @@ export default function Dashboard() {
       name: orderName,
       crusadeCards: [],
     })
+  }
+
+  const deleteOrder = (orderId: string) => {
+    console.log('clicked')
+    ordersCollection.doc(orderId).delete()
   }
 
   const handleChange = (value: string) => {
@@ -56,10 +60,9 @@ export default function Dashboard() {
               { status === 'loading' && <li>Loading orders...</li>}
               { fireOrders && fireOrders.map( (order) => {
                 return (
-                  <li 
-                    key={order.docID as string} 
-                    onClick={() => setSelectedOrder(order.docID as string)}>
-                      {order.name as string}
+                  <li key={order.docID as string} >
+                    <span onClick={() => setSelectedOrder(order.docID as string)}>{order.name as string}</span>
+                    <button onClick={() => deleteOrder(order.docID as string)}>delete</button>
                   </li>
                 )
               })}
