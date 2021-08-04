@@ -28,12 +28,14 @@ current
 - crusadeCard component: can edit the details of an individual unit
 - Input components: reduces the repetition when adding lots of inputs to a component
 - A multi-select/ tag component for the crusade card fields that can have multiple values
+-  enable the deletion of ordersOfBattle and Units
+-  allow a user to log out
 
 
 planed
-- enable the deletion of ordersOfBattle and Units
+
 - flesh out the css to make it responsive and enhance usability
-- allow a user to log out
+- 
 
 
 ## Getting Started with Create React App: readme from npx create-react-app
